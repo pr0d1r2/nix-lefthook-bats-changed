@@ -1,0 +1,6 @@
+---
+pre-push:
+  commands:
+    bats-changed:
+      glob: "*.{sh,bats}"
+      run: timeout ${LEFTHOOK_BATS_CHANGED_TIMEOUT:-120} lefthook-bats-changed {push_files}
