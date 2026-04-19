@@ -6,22 +6,36 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
+  build-linux:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: cachix/install-nix-action@v27
+      - uses: actions/checkout@v6
+      - uses: cachix/install-nix-action@v31
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
       - name: Build
         run: nix build
       - name: Pre-commit checks
-        run: nix develop --command bash -c 'lefthook run pre-commit --all-files'
+        run: TERM=dumb nix develop --ignore-environment --keep TERM --command bash -c 'lefthook run pre-commit --all-files'
       - name: Pre-push checks
-        run: nix develop --command bash -c 'lefthook run pre-push --all-files'
+        run: TERM=dumb nix develop --ignore-environment --keep TERM --command bash -c 'lefthook run pre-push --all-files'
+
+  build-macos:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+      - name: Build
+        run: nix build
+      - name: Pre-commit checks
+        run: TERM=dumb nix develop --ignore-environment --keep TERM --command bash -c 'lefthook run pre-commit --all-files'
+      - name: Pre-push checks
+        run: TERM=dumb nix develop --ignore-environment --keep TERM --command bash -c 'lefthook run pre-push --all-files'

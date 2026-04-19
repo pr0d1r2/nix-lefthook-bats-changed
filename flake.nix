@@ -3,32 +3,24 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
-    nix-lefthook-nixfmt = {
-      url = "github:pr0d1r2/nix-lefthook-nixfmt";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nix-lefthook-shellcheck = {
-      url = "github:pr0d1r2/nix-lefthook-shellcheck";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nix-lefthook-shfmt = {
-      url = "github:pr0d1r2/nix-lefthook-shfmt";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nix-lefthook-statix = {
-      url = "github:pr0d1r2/nix-lefthook-statix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nix-lefthook-deadnix = {
-      url = "github:pr0d1r2/nix-lefthook-deadnix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nix-lefthook-nix-no-embedded-shell = {
-      url = "github:pr0d1r2/nix-lefthook-nix-no-embedded-shell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nix-lefthook-bats-failures-only = {
       url = "github:pr0d1r2/nix-lefthook-bats-failures-only";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-lefthook-git-conflict-markers = {
+      url = "github:pr0d1r2/nix-lefthook-git-conflict-markers";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-lefthook-git-no-local-paths = {
+      url = "github:pr0d1r2/nix-lefthook-git-no-local-paths";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-lefthook-missing-final-newline = {
+      url = "github:pr0d1r2/nix-lefthook-missing-final-newline";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-lefthook-trailing-whitespace = {
+      url = "github:pr0d1r2/nix-lefthook-trailing-whitespace";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -37,23 +29,21 @@
     {
       self,
       nixpkgs,
-      nix-lefthook-nixfmt,
-      nix-lefthook-shellcheck,
-      nix-lefthook-shfmt,
-      nix-lefthook-statix,
-      nix-lefthook-deadnix,
-      nix-lefthook-nix-no-embedded-shell,
       nix-lefthook-bats-failures-only,
+      nix-lefthook-git-conflict-markers,
+      nix-lefthook-git-no-local-paths,
+      nix-lefthook-missing-final-newline,
+      nix-lefthook-trailing-whitespace,
     }:
     let
-      supportedSystems = [
-        "aarch64-darwin"
-        "x86_64-darwin"
-        "x86_64-linux"
-        "aarch64-linux"
-      ];
-      forAllSystems =
-        f: nixpkgs.lib.genAttrs supportedSystems (system: f nixpkgs.legacyPackages.${system});
+        supportedSystems = [
+          "aarch64-darwin"
+          "x86_64-darwin"
+          "x86_64-linux"
+          "aarch64-linux"
+        ];
+        forAllSystems =
+          f: nixpkgs.lib.genAttrs supportedSystems (system: f nixpkgs.legacyPackages.${system});
     in
     {
       packages = forAllSystems (pkgs: {
@@ -69,6 +59,7 @@
         };
       });
 
+
       devShells = forAllSystems (
         pkgs:
         let
@@ -82,16 +73,24 @@
           default = pkgs.mkShell {
             packages = [
               self.packages.${pkgs.stdenv.hostPlatform.system}.default
-              nix-lefthook-nixfmt.packages.${pkgs.stdenv.hostPlatform.system}.default
-              nix-lefthook-shellcheck.packages.${pkgs.stdenv.hostPlatform.system}.default
-              nix-lefthook-shfmt.packages.${pkgs.stdenv.hostPlatform.system}.default
-              nix-lefthook-statix.packages.${pkgs.stdenv.hostPlatform.system}.default
-              nix-lefthook-deadnix.packages.${pkgs.stdenv.hostPlatform.system}.default
-              nix-lefthook-nix-no-embedded-shell.packages.${pkgs.stdenv.hostPlatform.system}.default
+              nix-lefthook-git-conflict-markers.packages.${pkgs.stdenv.hostPlatform.system}.default
+              nix-lefthook-git-no-local-paths.packages.${pkgs.stdenv.hostPlatform.system}.default
+              nix-lefthook-missing-final-newline.packages.${pkgs.stdenv.hostPlatform.system}.default
+              nix-lefthook-trailing-whitespace.packages.${pkgs.stdenv.hostPlatform.system}.default
               batsWithLibs
-              pkgs.yamllint
+              pkgs.coreutils
+              pkgs.deadnix
+              pkgs.editorconfig-checker
               pkgs.git
               pkgs.lefthook
+              pkgs.nix
+              pkgs.nixfmt
+              pkgs.parallel
+              pkgs.shellcheck
+              pkgs.shfmt
+              pkgs.statix
+              pkgs.typos
+              pkgs.yamllint
             ];
             shellHook = builtins.replaceStrings [ "@BATS_LIB_PATH@" ] [ "${batsWithLibs}" ] (
               builtins.readFile ./dev.sh
