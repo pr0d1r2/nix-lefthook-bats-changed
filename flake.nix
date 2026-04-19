@@ -36,14 +36,14 @@
       nix-lefthook-trailing-whitespace,
     }:
     let
-        supportedSystems = [
-          "aarch64-darwin"
-          "x86_64-darwin"
-          "x86_64-linux"
-          "aarch64-linux"
-        ];
-        forAllSystems =
-          f: nixpkgs.lib.genAttrs supportedSystems (system: f nixpkgs.legacyPackages.${system});
+      supportedSystems = [
+        "aarch64-darwin"
+        "x86_64-darwin"
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
+      forAllSystems =
+        f: nixpkgs.lib.genAttrs supportedSystems (system: f nixpkgs.legacyPackages.${system});
     in
     {
       packages = forAllSystems (pkgs: {
@@ -58,7 +58,6 @@
           text = builtins.readFile ./lefthook-bats-changed.sh;
         };
       });
-
 
       devShells = forAllSystems (
         pkgs:
