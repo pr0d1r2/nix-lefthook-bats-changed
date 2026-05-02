@@ -18,11 +18,11 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
       - name: Build
-        run: nix build
+        run: nix build --accept-flake-config
       - name: Pre-commit checks
-        run: TERM=dumb nix develop --ignore-environment --keep TERM --command bash -c 'lefthook run pre-commit --all-files'
+        run: TERM=dumb nix develop --accept-flake-config --ignore-environment --keep TERM .#ci --command bash -c 'lefthook run pre-commit --all-files'
       - name: Pre-push checks
-        run: TERM=dumb nix develop --ignore-environment --keep TERM --command bash -c 'lefthook run pre-push --all-files'
+        run: TERM=dumb nix develop --accept-flake-config --ignore-environment --keep TERM .#ci --command bash -c 'lefthook run pre-push --all-files'
 
   build-macos:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
@@ -34,8 +34,8 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
       - name: Build
-        run: nix build
+        run: nix build --accept-flake-config
       - name: Pre-commit checks
-        run: TERM=dumb nix develop --ignore-environment --keep TERM --command bash -c 'lefthook run pre-commit --all-files'
+        run: TERM=dumb nix develop --accept-flake-config --ignore-environment --keep TERM .#ci --command bash -c 'lefthook run pre-commit --all-files'
       - name: Pre-push checks
-        run: TERM=dumb nix develop --ignore-environment --keep TERM --command bash -c 'lefthook run pre-push --all-files'
+        run: TERM=dumb nix develop --accept-flake-config --ignore-environment --keep TERM .#ci --command bash -c 'lefthook run pre-push --all-files'
