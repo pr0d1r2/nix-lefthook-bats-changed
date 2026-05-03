@@ -19,10 +19,10 @@ jobs:
             experimental-features = nix-command flakes
       - name: Build
         run: nix build --accept-flake-config
-      - name: Pre-commit checks
-        run: TERM=dumb nix develop --accept-flake-config --ignore-environment --keep TERM --keep TMPDIR --keep HOME .#ci --command bash -c 'mkdir -p "$HOME/.parallel" && touch "$HOME/.parallel/will-cite"; LEFTHOOK_BATS_CHANGED_TIMEOUT=300 lefthook run pre-commit --all-files'
-      - name: Pre-push checks
-        run: TERM=dumb nix develop --accept-flake-config --ignore-environment --keep TERM --keep TMPDIR --keep HOME .#ci --command bash -c 'mkdir -p "$HOME/.parallel" && touch "$HOME/.parallel/will-cite"; LEFTHOOK_BATS_CHANGED_TIMEOUT=300 lefthook run pre-push --all-files'
+      - name: Install lefthook remotes
+        run: TERM=dumb nix develop --accept-flake-config --ignore-environment --keep TERM .#ci --command lefthook install
+      - name: Lefthook checks
+        run: TERM=dumb nix develop --accept-flake-config --ignore-environment --keep TERM --keep HOME .#ci --command bash -c 'mkdir -p "$HOME/.parallel" && touch "$HOME/.parallel/will-cite"; LEFTHOOK_BATS_CHANGED_TIMEOUT=300 lefthook run pre-push --all-files'
 
   build-macos:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
@@ -35,7 +35,7 @@ jobs:
             experimental-features = nix-command flakes
       - name: Build
         run: nix build --accept-flake-config
-      - name: Pre-commit checks
-        run: TERM=dumb nix develop --accept-flake-config --ignore-environment --keep TERM --keep TMPDIR --keep HOME .#ci --command bash -c 'mkdir -p "$HOME/.parallel" && touch "$HOME/.parallel/will-cite"; LEFTHOOK_BATS_CHANGED_TIMEOUT=300 lefthook run pre-commit --all-files'
-      - name: Pre-push checks
-        run: TERM=dumb nix develop --accept-flake-config --ignore-environment --keep TERM --keep TMPDIR --keep HOME .#ci --command bash -c 'mkdir -p "$HOME/.parallel" && touch "$HOME/.parallel/will-cite"; LEFTHOOK_BATS_CHANGED_TIMEOUT=300 lefthook run pre-push --all-files'
+      - name: Install lefthook remotes
+        run: TERM=dumb nix develop --accept-flake-config --ignore-environment --keep TERM .#ci --command lefthook install
+      - name: Lefthook checks
+        run: TERM=dumb nix develop --accept-flake-config --ignore-environment --keep TERM --keep HOME .#ci --command bash -c 'mkdir -p "$HOME/.parallel" && touch "$HOME/.parallel/will-cite"; LEFTHOOK_BATS_CHANGED_TIMEOUT=300 lefthook run pre-push --all-files'

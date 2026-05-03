@@ -38,16 +38,24 @@
     in
     {
       packages = forAllSystems (pkgs: {
-        default = pkgs.writeShellApplication {
-          name = "lefthook-bats-changed";
-          runtimeInputs = [
-            pkgs.bats
-            pkgs.gawk
-            pkgs.coreutils
-            nix-lefthook-bats-failures-only.packages.${pkgs.stdenv.hostPlatform.system}.default
-          ];
-          text = builtins.readFile ./lefthook-bats-changed.sh;
-        };
+        default =
+          let
+            batsWithLibs = pkgs.bats.withLibraries (p: [
+              p.bats-assert
+              p.bats-support
+              p.bats-file
+            ]);
+          in
+          pkgs.writeShellApplication {
+            name = "lefthook-bats-changed";
+            runtimeInputs = [
+              batsWithLibs
+              pkgs.gawk
+              pkgs.coreutils
+              nix-lefthook-bats-failures-only.packages.${pkgs.stdenv.hostPlatform.system}.default
+            ];
+            text = builtins.readFile ./lefthook-bats-changed.sh;
+          };
       });
 
       devShells = forAllSystems (
