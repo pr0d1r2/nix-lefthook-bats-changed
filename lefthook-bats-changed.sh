@@ -29,23 +29,19 @@ for f in "$@"; do
             tests+=("$f")
             ;;
         *.sh)
-            raw_stem="$(basename "$f")"
-            raw_stem="${raw_stem%.sh}"
-            norm_stem="${raw_stem//_/-}"
-            dir="$(dirname "$f")"
-            if [ "$dir" = "." ]; then
-                candidate="tests/unit/${norm_stem}.bats"
-                alt="tests/unit/${raw_stem}.bats"
+            match=$(bash @FIND_BATS_FOR_FILE@ "$f")
+            if [ -n "$match" ]; then
+                tests+=("$match")
             else
-                candidate="tests/unit/${dir}/${norm_stem}.bats"
-                alt="tests/unit/${dir}/${raw_stem}.bats"
-            fi
-            if [ -f "$candidate" ]; then
-                tests+=("$candidate")
-            elif [ "$raw_stem" != "$norm_stem" ] && [ -f "$alt" ]; then
-                tests+=("$alt")
-            else
-                missing+=("$f -> $candidate")
+                raw_stem="$(basename "$f")"
+                raw_stem="${raw_stem%.sh}"
+                norm_stem="${raw_stem//_/-}"
+                dir="$(dirname "$f")"
+                if [ "$dir" = "." ]; then
+                    missing+=("$f -> tests/unit/${norm_stem}.bats")
+                else
+                    missing+=("$f -> tests/unit/${dir}/${norm_stem}.bats")
+                fi
             fi
             ;;
     esac
@@ -62,9 +58,13 @@ fi
 
 mapfile -t tests < <(printf '%s\n' "${tests[@]}" | awk '!seen[$0]++')
 
+jobs="${LEFTHOOK_BATS_CHANGED_JOBS:-$(nproc)}"
+
 echo "bats-changed: running ${#tests[@]} spec(s) for staged changes"
+# Unset to prevent colon-joined collision with wrapper's bats-with-libraries
+unset BATS_LIB_PATH
 if [ "$failures_only" -eq 1 ]; then
-    exec lefthook-bats-failures-only --jobs "$(nproc)" "${tests[@]}"
+    exec lefthook-bats-failures-only --jobs "$jobs" "${tests[@]}"
 else
-    exec bats --jobs "$(nproc)" "${tests[@]}"
+    exec bats --jobs "$jobs" "${tests[@]}"
 fi

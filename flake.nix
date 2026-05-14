@@ -45,6 +45,9 @@
               p.bats-support
               p.bats-file
             ]);
+            findBatsForFile = pkgs.writeText "find-bats-for-file.sh" (
+              builtins.readFile ./find-bats-for-file.sh
+            );
           in
           pkgs.writeShellApplication {
             name = "lefthook-bats-changed";
@@ -54,7 +57,9 @@
               pkgs.coreutils
               nix-lefthook-bats-failures-only.packages.${pkgs.stdenv.hostPlatform.system}.default
             ];
-            text = builtins.readFile ./lefthook-bats-changed.sh;
+            text = builtins.replaceStrings [ "@FIND_BATS_FOR_FILE@" ] [ "${findBatsForFile}" ] (
+              builtins.readFile ./lefthook-bats-changed.sh
+            );
           };
       });
 

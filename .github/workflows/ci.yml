@@ -22,7 +22,7 @@ jobs:
       - name: Install lefthook remotes
         run: TERM=dumb nix develop --ignore-environment --keep TERM .#ci --command lefthook install
       - name: Lefthook checks
-        run: TERM=dumb nix develop --ignore-environment --keep TERM --keep HOME .#ci --command bash -c 'mkdir -p "$HOME/.parallel" && touch "$HOME/.parallel/will-cite"; LEFTHOOK_BATS_CHANGED_TIMEOUT=300 lefthook run pre-push --all-files'
+        run: TERM=dumb nix develop --ignore-environment --keep TERM --keep HOME .#ci --command bash -c 'mkdir -p "$HOME/.parallel" && touch "$HOME/.parallel/will-cite"; LEFTHOOK_BATS_CHANGED_TIMEOUT=300 LEFTHOOK_BATS_CHANGED_JOBS=1 lefthook run pre-push --all-files'
 
   build-macos:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
@@ -38,4 +38,4 @@ jobs:
       - name: Install lefthook remotes
         run: TERM=dumb nix develop --ignore-environment --keep TERM .#ci --command lefthook install
       - name: Lefthook checks
-        run: TERM=dumb nix develop --ignore-environment --keep TERM --keep HOME .#ci --command bash -c 'mkdir -p "$HOME/.parallel" && touch "$HOME/.parallel/will-cite"; LEFTHOOK_BATS_CHANGED_TIMEOUT=300 lefthook run pre-push --all-files'
+        run: TERM=dumb nix develop --ignore-environment --keep TERM --keep HOME .#ci --command bash -c 'mkdir -p "$HOME/.parallel" && touch "$HOME/.parallel/will-cite"; LEFTHOOK_BATS_CHANGED_TIMEOUT=300 LEFTHOOK_BATS_CHANGED_JOBS=1 lefthook run pre-push --all-files'
