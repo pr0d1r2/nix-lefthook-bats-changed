@@ -29,23 +29,19 @@ for f in "$@"; do
             tests+=("$f")
             ;;
         *.sh)
-            raw_stem="$(basename "$f")"
-            raw_stem="${raw_stem%.sh}"
-            norm_stem="${raw_stem//_/-}"
-            dir="$(dirname "$f")"
-            if [ "$dir" = "." ]; then
-                candidate="tests/unit/${norm_stem}.bats"
-                alt="tests/unit/${raw_stem}.bats"
+            match=$(bash @FIND_BATS_FOR_FILE@ "$f")
+            if [ -n "$match" ]; then
+                tests+=("$match")
             else
-                candidate="tests/unit/${dir}/${norm_stem}.bats"
-                alt="tests/unit/${dir}/${raw_stem}.bats"
-            fi
-            if [ -f "$candidate" ]; then
-                tests+=("$candidate")
-            elif [ "$raw_stem" != "$norm_stem" ] && [ -f "$alt" ]; then
-                tests+=("$alt")
-            else
-                missing+=("$f -> $candidate")
+                raw_stem="$(basename "$f")"
+                raw_stem="${raw_stem%.sh}"
+                norm_stem="${raw_stem//_/-}"
+                dir="$(dirname "$f")"
+                if [ "$dir" = "." ]; then
+                    missing+=("$f -> tests/unit/${norm_stem}.bats")
+                else
+                    missing+=("$f -> tests/unit/${dir}/${norm_stem}.bats")
+                fi
             fi
             ;;
     esac
