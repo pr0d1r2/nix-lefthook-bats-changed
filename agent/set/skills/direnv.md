@@ -1,3 +1,5 @@
+# Direnv
+
 Flake entrypoint should be direnv via .envrc file.
 File .envrc should watch flake and its modules and files they depend on for changes to reload.
 

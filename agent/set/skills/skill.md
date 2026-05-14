@@ -1,3 +1,5 @@
+# Skill meta
+
 The `agent/set/skills/` tree holds this project's behavioral rules, one concept per file. It is structured, not flat: a top-level `<topic>.md` captures the core rule for a topic, and `<topic>/<aspect>.md` captures a specific facet of it (e.g. `sh.md` + `sh/modularity.md`, `lefthook.md` + `lefthook/{nix,sh}.md`).
 
 Every file here is chain-loaded into every session via `agent/set.md` (which the project `CLAUDE.md` @-imports). When you need to check whether a topic has a rule, prefer listing or grepping this tree over guessing.
