@@ -58,9 +58,13 @@ fi
 
 mapfile -t tests < <(printf '%s\n' "${tests[@]}" | awk '!seen[$0]++')
 
+jobs="${LEFTHOOK_BATS_CHANGED_JOBS:-$(nproc)}"
+
 echo "bats-changed: running ${#tests[@]} spec(s) for staged changes"
+# Unset to prevent colon-joined collision with wrapper's bats-with-libraries
+unset BATS_LIB_PATH
 if [ "$failures_only" -eq 1 ]; then
-    exec lefthook-bats-failures-only --jobs "$(nproc)" "${tests[@]}"
+    exec lefthook-bats-failures-only --jobs "$jobs" "${tests[@]}"
 else
-    exec bats --jobs "$(nproc)" "${tests[@]}"
+    exec bats --jobs "$jobs" "${tests[@]}"
 fi
