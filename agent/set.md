@@ -14,8 +14,6 @@
 @./set/skills/lefthook/tdd.md
 @./set/skills/lefthook/timeout.md
 @./set/skills/direnv.md
-@./set/skills/justfile.md
-@./set/skills/just.md
 @./set/skills/tdd.md
 @./set/skills/test/coverage.md
 @./set/skills/test/unit.md
