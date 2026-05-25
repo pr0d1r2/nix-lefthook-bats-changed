@@ -21,4 +21,3 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: pr0d1r2/nix-lefthook-ci-action@fc0c391434c5603e8289549b3cc91f922896cc51
-
