@@ -1418,11 +1418,33 @@
         "type": "github"
       }
     },
+    "nixpkgs-lock": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1780807744,
+        "narHash": "sha256-BsRQIpTaGrmwn/LbK2kp1iYTc6wrWfxtswLx+gcM424=",
+        "owner": "pr0d1r2",
+        "repo": "nixpkgs-lock",
+        "rev": "1e6ffb1960305718ccd8935fcedd353d2b35a387",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pr0d1r2",
+        "repo": "nixpkgs-lock",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "nix-dev-shell-agentic": "nix-dev-shell-agentic",
         "nix-lefthook-bats-failures-only-src": "nix-lefthook-bats-failures-only-src",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": [
+          "nixpkgs-lock",
+          "nixpkgs"
+        ],
+        "nixpkgs-lock": "nixpkgs-lock"
       }
     },
     "rtk-src": {
