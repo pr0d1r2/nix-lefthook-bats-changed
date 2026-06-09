@@ -12,15 +12,15 @@ norm_stem="${raw_stem//_/-}"
 dir="$(dirname "$f")"
 
 if [ "$dir" = "." ]; then
-    candidate="tests/unit/${norm_stem}.bats"
-    alt="tests/unit/${raw_stem}.bats"
+  candidate="tests/unit/${norm_stem}.bats"
+  alt="tests/unit/${raw_stem}.bats"
 else
-    candidate="tests/unit/${dir}/${norm_stem}.bats"
-    alt="tests/unit/${dir}/${raw_stem}.bats"
+  candidate="tests/unit/${dir}/${norm_stem}.bats"
+  alt="tests/unit/${dir}/${raw_stem}.bats"
 fi
 
 if [ -f "$candidate" ]; then
-    echo "$candidate"
+  echo "$candidate"
 elif [ "$raw_stem" != "$norm_stem" ] && [ -f "$alt" ]; then
-    echo "$alt"
+  echo "$alt"
 fi
