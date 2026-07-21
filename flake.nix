@@ -11,6 +11,11 @@
     nixpkgs.follows = "nixpkgs-lock/nixpkgs";
 
     set-and-setting.url = "github:pr0d1r2/set-and-setting";
+
+    nix-lefthook-bats-failures-only-src = {
+      url = "github:pr0d1r2/nix-lefthook-bats-failures-only";
+      flake = false;
+    };
   };
 
   outputs =
@@ -18,6 +23,7 @@
       self,
       nixpkgs,
       set-and-setting,
+      nix-lefthook-bats-failures-only-src,
       ...
     }:
     let
@@ -48,11 +54,26 @@
               p.bats-support
               p.bats-file
             ]);
-          default = pkgs.mkShell {
-            packages = ciCommon;
-            shellHook = builtins.replaceStrings [ "@BATS_LIB_PATH@" ] [ "${batsWithLibs}" ] (
-              builtins.readFile ./dev.sh
+            findBatsForFile = pkgs.writeText "find-bats-for-file.sh" (
+              builtins.readFile ./find-bats-for-file.sh
             );
+            lefthook-bats-failures-only = pkgs.writeShellApplication {
+              name = "lefthook-bats-failures-only";
+              runtimeInputs = [ batsWithLibs ];
+              text = builtins.readFile "${nix-lefthook-bats-failures-only-src}/lefthook-bats-failures-only.sh";
+            };
+          in
+          pkgs.writeShellApplication {
+            name = "lefthook-bats-changed";
+            runtimeInputs = [
+              batsWithLibs
+              pkgs.gawk
+              pkgs.coreutils
+              lefthook-bats-failures-only
+            ];
+            text = builtins.replaceStrings [ "@FIND_BATS_FOR_FILE@" ] [
+              "${findBatsForFile}"
+            ] (builtins.readFile ./lefthook-bats-changed.sh);
           };
         setting = (set-and-setting.lib.mkSetting { inherit pkgs; }).materialized;
       });
