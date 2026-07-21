@@ -1,5 +1,5 @@
 {
-  description = "Lefthook-compatible bats changed-files runner";
+  description = "CHANGEME";
 
   nixConfig = {
     extra-substituters = [ "https://pr0d1r2.cachix.org" ];
@@ -9,68 +9,11 @@
   inputs = {
     nixpkgs-lock.url = "github:pr0d1r2/nixpkgs-lock";
     nixpkgs.follows = "nixpkgs-lock/nixpkgs";
+
+    set-and-setting.url = "github:pr0d1r2/set-and-setting";
+
     nix-lefthook-bats-failures-only-src = {
       url = "github:pr0d1r2/nix-lefthook-bats-failures-only";
-      flake = false;
-    };
-    nix-lefthook-bats-unit-src = {
-      url = "github:pr0d1r2/nix-lefthook-bats-unit";
-      flake = false;
-    };
-    nix-lefthook-deadnix-src = {
-      url = "github:pr0d1r2/nix-lefthook-deadnix";
-      flake = false;
-    };
-    nix-lefthook-editorconfig-checker-src = {
-      url = "github:pr0d1r2/nix-lefthook-editorconfig-checker";
-      flake = false;
-    };
-    nix-lefthook-file-size-check-src = {
-      url = "github:pr0d1r2/nix-lefthook-file-size-check";
-      flake = false;
-    };
-    nix-lefthook-git-conflict-markers-src = {
-      url = "github:pr0d1r2/nix-lefthook-git-conflict-markers";
-      flake = false;
-    };
-    nix-lefthook-git-no-local-paths-src = {
-      url = "github:pr0d1r2/nix-lefthook-git-no-local-paths";
-      flake = false;
-    };
-    nix-lefthook-missing-final-newline-src = {
-      url = "github:pr0d1r2/nix-lefthook-missing-final-newline";
-      flake = false;
-    };
-    nix-lefthook-nixfmt-src = {
-      url = "github:pr0d1r2/nix-lefthook-nixfmt";
-      flake = false;
-    };
-    nix-lefthook-nix-no-embedded-shell-src = {
-      url = "github:pr0d1r2/nix-lefthook-nix-no-embedded-shell";
-      flake = false;
-    };
-    nix-lefthook-shellcheck-src = {
-      url = "github:pr0d1r2/nix-lefthook-shellcheck";
-      flake = false;
-    };
-    nix-lefthook-shfmt-src = {
-      url = "github:pr0d1r2/nix-lefthook-shfmt";
-      flake = false;
-    };
-    nix-lefthook-statix-src = {
-      url = "github:pr0d1r2/nix-lefthook-statix";
-      flake = false;
-    };
-    nix-lefthook-trailing-whitespace-src = {
-      url = "github:pr0d1r2/nix-lefthook-trailing-whitespace";
-      flake = false;
-    };
-    nix-lefthook-typos-src = {
-      url = "github:pr0d1r2/nix-lefthook-typos";
-      flake = false;
-    };
-    nix-lefthook-yamllint-src = {
-      url = "github:pr0d1r2/nix-lefthook-yamllint";
       flake = false;
     };
   };
@@ -79,22 +22,8 @@
     {
       self,
       nixpkgs,
+      set-and-setting,
       nix-lefthook-bats-failures-only-src,
-      nix-lefthook-bats-unit-src,
-      nix-lefthook-deadnix-src,
-      nix-lefthook-editorconfig-checker-src,
-      nix-lefthook-file-size-check-src,
-      nix-lefthook-git-conflict-markers-src,
-      nix-lefthook-git-no-local-paths-src,
-      nix-lefthook-missing-final-newline-src,
-      nix-lefthook-nixfmt-src,
-      nix-lefthook-nix-no-embedded-shell-src,
-      nix-lefthook-shellcheck-src,
-      nix-lefthook-shfmt-src,
-      nix-lefthook-statix-src,
-      nix-lefthook-trailing-whitespace-src,
-      nix-lefthook-typos-src,
-      nix-lefthook-yamllint-src,
       ...
     }:
     let
@@ -107,98 +36,14 @@
       forAllSystems =
         f: nixpkgs.lib.genAttrs supportedSystems (system: f nixpkgs.legacyPackages.${system});
 
-      batsWithLibsFor =
-        pkgs:
-        pkgs.bats.withLibraries (p: [
-          p.bats-assert
-          p.bats-support
-          p.bats-file
-        ]);
-
-      lefthookWrappersFor =
-        pkgs:
-        let
-          wrap =
-            name: src: extra:
-            pkgs.writeShellApplication (
-              {
-                inherit name;
-                text = builtins.readFile "${src}/${name}.sh";
-              }
-              // extra
-            );
-        in
-        [
-          (wrap "lefthook-bats-unit" nix-lefthook-bats-unit-src {
-            runtimeInputs = [
-              pkgs.bats
-              pkgs.coreutils
-              pkgs.parallel
-            ];
-          })
-          (wrap "lefthook-deadnix" nix-lefthook-deadnix-src {
-            runtimeInputs = [ pkgs.deadnix ];
-          })
-          (wrap "lefthook-editorconfig-checker" nix-lefthook-editorconfig-checker-src {
-            runtimeInputs = [ pkgs.editorconfig-checker ];
-          })
-          (wrap "get-file-size-limit" nix-lefthook-file-size-check-src {
-            runtimeInputs = [
-              pkgs.gawk
-              pkgs.gnugrep
-            ];
-          })
-          (pkgs.writeShellApplication {
-            name = "lefthook-file-size-check";
-            runtimeInputs = [
-              pkgs.gawk
-              pkgs.gnugrep
-              pkgs.coreutils
-              (wrap "get-file-size-limit" nix-lefthook-file-size-check-src {
-                runtimeInputs = [
-                  pkgs.gawk
-                  pkgs.gnugrep
-                ];
-              })
-            ];
-            text = builtins.readFile "${nix-lefthook-file-size-check-src}/lefthook-file-size-check.sh";
-          })
-          (wrap "lefthook-git-conflict-markers" nix-lefthook-git-conflict-markers-src {
-            runtimeInputs = [ pkgs.gnugrep ];
-          })
-          (wrap "lefthook-git-no-local-paths" nix-lefthook-git-no-local-paths-src {
-            runtimeInputs = [ pkgs.gnugrep ];
-          })
-          (wrap "lefthook-missing-final-newline" nix-lefthook-missing-final-newline-src { })
-          (wrap "lefthook-nixfmt" nix-lefthook-nixfmt-src {
-            runtimeInputs = [ pkgs.nixfmt ];
-          })
-          (pkgs.writeShellApplication {
-            name = "lefthook-nix-no-embedded-shell";
-            text = ''
-              SCANNER="${nix-lefthook-nix-no-embedded-shell-src}/scan-nix-no-embedded-shell.sh"
-            ''
-            + builtins.readFile "${nix-lefthook-nix-no-embedded-shell-src}/lefthook-nix-no-embedded-shell.sh";
-          })
-          (wrap "lefthook-shellcheck" nix-lefthook-shellcheck-src {
-            runtimeInputs = [ pkgs.shellcheck ];
-          })
-          (wrap "lefthook-shfmt" nix-lefthook-shfmt-src {
-            runtimeInputs = [ pkgs.shfmt ];
-          })
-          (wrap "lefthook-statix" nix-lefthook-statix-src {
-            runtimeInputs = [ pkgs.statix ];
-          })
-          (wrap "lefthook-trailing-whitespace" nix-lefthook-trailing-whitespace-src {
-            runtimeInputs = [ pkgs.gnugrep ];
-          })
-          (wrap "lefthook-typos" nix-lefthook-typos-src {
-            runtimeInputs = [ pkgs.typos ];
-          })
-          (wrap "lefthook-yamllint" nix-lefthook-yamllint-src {
-            runtimeInputs = [ pkgs.yamllint ];
-          })
-        ];
+      fragments = [
+        "base"
+        "nix"
+        "shell"
+        "ascii"
+        "markdown"
+        "yaml"
+      ];
     in
     {
       packages = forAllSystems (pkgs: {
@@ -212,6 +57,11 @@
             findBatsForFile = pkgs.writeText "find-bats-for-file.sh" (
               builtins.readFile ./find-bats-for-file.sh
             );
+            lefthook-bats-failures-only = pkgs.writeShellApplication {
+              name = "lefthook-bats-failures-only";
+              runtimeInputs = [ batsWithLibs ];
+              text = builtins.readFile "${nix-lefthook-bats-failures-only-src}/lefthook-bats-failures-only.sh";
+            };
           in
           pkgs.writeShellApplication {
             name = "lefthook-bats-changed";
@@ -219,47 +69,99 @@
               batsWithLibs
               pkgs.gawk
               pkgs.coreutils
-              (pkgs.writeShellApplication {
-                name = "lefthook-bats-failures-only";
-                runtimeInputs = [
-                  batsWithLibs
-                ];
-                text = builtins.readFile "${nix-lefthook-bats-failures-only-src}/lefthook-bats-failures-only.sh";
-              })
+              lefthook-bats-failures-only
             ];
-            text = builtins.replaceStrings [ "@FIND_BATS_FOR_FILE@" ] [ "${findBatsForFile}" ] (
-              builtins.readFile ./lefthook-bats-changed.sh
-            );
+            text =
+              builtins.replaceStrings
+                [ "@FIND_BATS_FOR_FILE@" ]
+                [
+                  "${findBatsForFile}"
+                ]
+                (builtins.readFile ./lefthook-bats-changed.sh);
           };
+        setting = (set-and-setting.lib.mkSetting { inherit pkgs; }).materialized;
       });
 
       devShells = forAllSystems (
         pkgs:
         let
-          inherit (pkgs.stdenv.hostPlatform) system;
-          batsWithLibs = batsWithLibsFor pkgs;
-          ciCommon = [
-            self.packages.${system}.default
-            batsWithLibs
-            pkgs.bats
-            pkgs.coreutils
-            pkgs.git
-            pkgs.lefthook
-            pkgs.nix
-            pkgs.parallel
-          ]
-          ++ (lefthookWrappersFor pkgs);
+          mat = set-and-setting.lib.materializationFor { inherit pkgs fragments; };
+          sys = pkgs.stdenv.hostPlatform.system;
+        in
+        set-and-setting.lib.mkDevShells {
+          inherit pkgs;
+          basePackages = mat.packages ++ [ self.packages.${sys}.default ];
+          settingHook = ''
+            ${self.packages.${sys}.setting}/bin/sync-setting .
+            _assemble_out="$(mktemp -d)"
+            FRAGMENTS="${builtins.concatStringsSep " " fragments}" \
+              out="$_assemble_out" \
+              FRAGMENTS_DIR="${set-and-setting}/setting/integrations/lefthook" \
+              bash "${set-and-setting}/setting/lib/assemble-lefthook.sh"
+            cp -f "$_assemble_out/lefthook.yml" lefthook.yml
+            rm -rf "$_assemble_out"
+          '';
+        }
+      );
+
+      checks = forAllSystems (
+        pkgs:
+        (set-and-setting.lib.checksFor {
+          inherit pkgs fragments;
+          src = ./.;
+        })
+        // {
+          dep-graph = set-and-setting.lib.mkDepGraphCheck {
+            inherit pkgs;
+            projectRoot = ./.;
+          };
+          default = pkgs.runCommand "checks" { } "touch $out";
+        }
+      );
+
+      apps = forAllSystems (
+        pkgs:
+        let
+          mat = set-and-setting.lib.materializationFor { inherit pkgs fragments; };
+          sys = pkgs.stdenv.hostPlatform.system;
         in
         {
-          ci = pkgs.mkShell {
-            packages = ciCommon;
-            BATS_LIB_PATH = "${batsWithLibs}/share/bats";
-          };
-          default = pkgs.mkShell {
-            packages = ciCommon;
-            shellHook = builtins.replaceStrings [ "@BATS_LIB_PATH@" ] [ "${batsWithLibs}" ] (
-              builtins.readFile ./dev.sh
-            );
+          confirm = {
+            type = "app";
+            program = "${
+              pkgs.writeShellApplication {
+                name = "confirm";
+                runtimeInputs = [
+                  pkgs.coreutils
+                  pkgs.diffutils
+                  pkgs.findutils
+                  pkgs.gawk
+                  pkgs.git
+                  pkgs.gnugrep
+                ]
+                ++ mat.packages
+                ++ [ self.packages.${sys}.default ];
+                text =
+                  builtins.replaceStrings
+                    [
+                      "@FRAGMENTS_DIR@"
+                      "@ASSEMBLE_SCRIPT@"
+                      "@DETECT_SCRIPT@"
+                      "@SETTING_SRC@"
+                      "@CONFIRM_SCRIPT@"
+                      "@CONFIRM_REV@"
+                    ]
+                    [
+                      "${set-and-setting}/setting/integrations/lefthook"
+                      "${set-and-setting}/setting/lib/assemble-lefthook.sh"
+                      "${set-and-setting}/setting/lib/detect-fragments.sh"
+                      "${self.packages.${sys}.setting}"
+                      "${set-and-setting}/lib/confirm.sh"
+                      "${set-and-setting.rev or "unknown"}"
+                    ]
+                    (builtins.readFile ./nix/confirm-wrapper.sh);
+              }
+            }/bin/confirm";
           };
         }
       );
