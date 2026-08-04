@@ -83,7 +83,10 @@ in
     })
     // {
       ci = pkgs.mkShell {
-        packages = mat.packages ++ [ batsWithLibs self.packages.${sys}.default ];
+        packages = mat.packages ++ [
+          batsWithLibs
+          self.packages.${sys}.default
+        ];
         shellHook = ''
           export BATS_LIB_PATH="${batsWithLibs}/share/bats"
           ${self.packages.${sys}.setting}/bin/sync-setting .
