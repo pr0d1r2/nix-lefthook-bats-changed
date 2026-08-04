@@ -61,8 +61,13 @@ in
     let
       mat = set-and-setting.lib.materializationFor { inherit pkgs fragments; };
       sys = pkgs.stdenv.hostPlatform.system;
+      batsWithLibs = pkgs.bats.withLibraries (p: [
+        p.bats-assert
+        p.bats-support
+        p.bats-file
+      ]);
     in
-    set-and-setting.lib.mkDevShells {
+    (set-and-setting.lib.mkDevShells {
       inherit pkgs;
       basePackages = mat.packages ++ [ self.packages.${sys}.default ];
       settingHook = ''
@@ -75,6 +80,22 @@ in
         cp -f "$_assemble_out/lefthook.yml" lefthook.yml
         rm -rf "$_assemble_out"
       '';
+    })
+    // {
+      ci = pkgs.mkShell {
+        packages = mat.packages ++ [ batsWithLibs self.packages.${sys}.default ];
+        shellHook = ''
+          export BATS_LIB_PATH="${batsWithLibs}/share/bats"
+          ${self.packages.${sys}.setting}/bin/sync-setting .
+          _assemble_out="$(mktemp -d)"
+          FRAGMENTS="${builtins.concatStringsSep " " fragments}" \
+            out="$_assemble_out" \
+            FRAGMENTS_DIR="${set-and-setting}/setting/integrations/lefthook" \
+            bash "${set-and-setting}/setting/lib/assemble-lefthook.sh"
+          cp -f "$_assemble_out/lefthook.yml" lefthook.yml
+          rm -rf "$_assemble_out"
+        '';
+      };
     }
   );
 
