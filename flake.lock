@@ -16,6 +16,22 @@
         "type": "github"
       }
     },
+    "nix-lefthook-bats-failures-only-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1786050374,
+        "narHash": "sha256-MbsERqYAhY67GfdD1oxPa49cuJb6Qbwz+t0iiW7DaqI=",
+        "owner": "pr0d1r2",
+        "repo": "nix-lefthook-bats-failures-only",
+        "rev": "a86c919dc4b447857232c7b47f92b7a7ead396db",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pr0d1r2",
+        "repo": "nix-lefthook-bats-failures-only",
+        "type": "github"
+      }
+    },
     "nix-lefthook-bats-parse-src": {
       "flake": false,
       "locked": {
@@ -484,6 +500,7 @@
     },
     "root": {
       "inputs": {
+        "nix-lefthook-bats-failures-only-src": "nix-lefthook-bats-failures-only-src",
         "nixpkgs": [
           "nixpkgs-lock",
           "nixpkgs"
