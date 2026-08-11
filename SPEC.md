@@ -45,8 +45,8 @@ local paths, zero private refs.
   (`lefthook-bats-changed`)
 - I.devshell: `devShells.${system}.default` + `.#ci` — dev/CI shells,
   built inline from `flake = false` lint-hook source leaves
-- I.ci: `.github/workflows/ci.yml` — linux + macos via
-  `nix-lefthook-ci-action`; `update-pins.yml` refreshes `nixpkgs-lock`
+- I.ci: `.github/workflows/ci.yml` — CI is delegated to the shared
+  `set-and-setting` guardrails workflow
 
 ## §V Invariants
 
