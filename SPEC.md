@@ -104,6 +104,7 @@ local paths, zero private refs.
 | B1 | 2026-08-18 | Guardrails fidelity could not find the canonical `lefthook.yml`; the repository used an ignored/generated name plus `lefthook-repo.yml`. | Track the assembled `lefthook.yml` under the expected name and stop ignoring it. |
 | B2 | 2026-08-18 | Canonical `lefthook.yml` included custom `bats-changed` commands that are not produced by the declared guardrails fragment set, so fidelity comparison failed. | Keep the generated canonical config faithful and provide `bats-changed` through `lefthook-remote.yml`. |
 | B3 | 2026-08-18 | Canonical `lefthook.yml` still contained five additional lint and coverage commands not emitted by the declared guardrails fragment set, so exact fidelity comparison failed. | Remove the non-fragment commands from the canonical config and rely on the corresponding pinned flake checks/devShell wrappers. |
+| B4 | 2026-08-18 | The canonical `lefthook.yml` snapshot was stale after the guardrails fragment materialization added `nix-flake-check`, `unicode-lint`, and `linter-coverage`, so fidelity comparison failed. | Regenerate and track `lefthook.yml` from the repository's `.#ci` shell. |
 
 | id | status | task | cites |
 |----|--------|------|-------|
