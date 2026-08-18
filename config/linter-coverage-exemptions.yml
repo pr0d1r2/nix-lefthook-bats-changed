@@ -1,0 +1,11 @@
+exempt:
+  - class: ".editorconfig"
+    ticket: 340
+  - class: ".envrc"
+    ticket: 341
+  - class: ".gitignore"
+    ticket: 342
+  - class: "LICENSE"
+    ticket: 343
+  - class: "bats"
+    ticket: 344

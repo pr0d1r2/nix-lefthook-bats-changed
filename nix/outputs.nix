@@ -16,12 +16,14 @@ let
     f: nixpkgs.lib.genAttrs supportedSystems (system: f nixpkgs.legacyPackages.${system});
   fragments = [
     "base"
+    "actions"
     "nix"
     "shell"
     "ascii"
     "markdown"
     "yaml"
   ];
+  checkFragments = builtins.filter (fragment: fragment != "actions") fragments;
 in
 {
   packages = forAllSystems (pkgs: {
@@ -75,7 +77,7 @@ in
         _assemble_out="$(mktemp -d)"
         FRAGMENTS="${builtins.concatStringsSep " " fragments}" \
           out="$_assemble_out" \
-          FRAGMENTS_DIR="${set-and-setting}/setting/integrations/lefthook" \
+        FRAGMENTS_DIR="${set-and-setting}/setting/integrations/lefthook" \
           bash "${set-and-setting}/setting/lib/assemble-lefthook.sh"
         cp -f "$_assemble_out/lefthook.yml" lefthook.yml
         rm -rf "$_assemble_out"
@@ -105,7 +107,8 @@ in
   checks = forAllSystems (
     pkgs:
     (set-and-setting.lib.checksFor {
-      inherit pkgs fragments;
+      inherit pkgs;
+      fragments = checkFragments;
       src = ../.;
     })
     // {
