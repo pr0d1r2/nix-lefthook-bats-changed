@@ -97,6 +97,12 @@ local paths, zero private refs.
 
 ## §T Tasks
 
+## §B Bugs
+
+| id | date | cause | fix |
+|----|------|-------|-----|
+| B1 | 2026-08-18 | Guardrails fidelity could not find the canonical `lefthook.yml`; the repository used an ignored/generated name plus `lefthook-repo.yml`. | Track the assembled `lefthook.yml` under the expected name and stop ignoring it. |
+
 | id | status | task | cites |
 |----|--------|------|-------|
 | T1 | x | core dispatcher: select `.bats` direct + `.sh`→spec, run, propagate exit | V1,V2,V4,V5,V12,I.cli |

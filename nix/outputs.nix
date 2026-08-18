@@ -77,9 +77,6 @@ in
           out="$_assemble_out" \
         FRAGMENTS_DIR="${set-and-setting}/setting/integrations/lefthook" \
           bash "${set-and-setting}/setting/lib/assemble-lefthook.sh"
-        sed -i '/^pre-commit:$/a\\  parallel: true' "$_assemble_out/lefthook.yml"
-        sed -i '/^pre-push:$/a\\  parallel: true' "$_assemble_out/lefthook.yml"
-        sed -i '1a\\remotes:' "$_assemble_out/lefthook.yml"
         cp -f "$_assemble_out/lefthook.yml" lefthook.yml
         rm -rf "$_assemble_out"
       '';
@@ -98,9 +95,6 @@ in
             out="$_assemble_out" \
             FRAGMENTS_DIR="${set-and-setting}/setting/integrations/lefthook" \
             bash "${set-and-setting}/setting/lib/assemble-lefthook.sh"
-          sed -i '/^pre-commit:$/a\\  parallel: true' "$_assemble_out/lefthook.yml"
-          sed -i '/^pre-push:$/a\\  parallel: true' "$_assemble_out/lefthook.yml"
-          sed -i '1a\\remotes:' "$_assemble_out/lefthook.yml"
           cp -f "$_assemble_out/lefthook.yml" lefthook.yml
           rm -rf "$_assemble_out"
         '';
