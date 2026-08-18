@@ -46,7 +46,7 @@ local paths, zero private refs.
 - I.devshell: `devShells.${system}.default` + `.#ci` — dev/CI shells,
   built inline from `flake = false` lint-hook source leaves
 - I.ci: `.github/workflows/ci.yml` — CI is delegated to the shared
-  `set-and-setting` guardrails workflow
+  `set-and-setting` guardrails workflow.
 
 ## §V Invariants
 
@@ -83,11 +83,9 @@ local paths, zero private refs.
 - V16: No hardcoded local filesystem paths (enforced by
   `nix-lefthook-git-no-local-paths` hook)
 - V17: CI runs pre-commit + pre-push lint/test suite on linux + macos
-- V18: All linters pass: shellcheck, shfmt, nixfmt, statix, deadnix,
-  yamllint, typos, editorconfig-checker, bats-parse, bats-unit,
-  nix-no-embedded-shell, trailing-whitespace, missing-final-newline,
-  git-conflict-markers, git-no-local-paths, file-size-check,
-  nix-flake-check
+- V18: All declared guardrail linters and tests pass, including shellcheck,
+  shfmt, nixfmt, statix, deadnix, yamllint, typos, editorconfig-checker,
+  Bats, structural checks, file-size-check, and nix-flake-check.
 - V19: Flattened flake — only `nixpkgs-lock` (+ `nixpkgs` follows) are
   real flake inputs; every lint-hook companion and the failures-only
   runner come from `flake = false` `-src` leaves read via
@@ -101,12 +99,13 @@ local paths, zero private refs.
 
 | id | date | cause | fix |
 |----|------|-------|-----|
-| B1 | 2026-08-18 | Guardrails fidelity could not find the canonical `lefthook.yml`; the repository used an ignored/generated name plus `lefthook-repo.yml`. | Track the assembled `lefthook.yml` under the expected name and stop ignoring it. |
-| B2 | 2026-08-18 | Canonical `lefthook.yml` included custom `bats-changed` commands that are not produced by the declared guardrails fragment set, so fidelity comparison failed. | Keep the generated canonical config faithful and provide `bats-changed` through `lefthook-remote.yml`. |
-| B3 | 2026-08-18 | Canonical `lefthook.yml` still contained five additional lint and coverage commands not emitted by the declared guardrails fragment set, so exact fidelity comparison failed. | Remove the non-fragment commands from the canonical config and rely on the corresponding pinned flake checks/devShell wrappers. |
-| B4 | 2026-08-18 | The canonical `lefthook.yml` snapshot was stale after the guardrails fragment materialization added `nix-flake-check`, `unicode-lint`, and `linter-coverage`, so fidelity comparison failed. | Regenerate and track `lefthook.yml` from the repository's `.#ci` shell. |
-| B5 | 2026-08-18 | The flake declared an incomplete fragment set and omitted `actions`, while guardrails fidelity expects the standard `base actions nix shell ascii markdown yaml` set. | Add `actions` to the materialized fragment set, keep it out of the incompatible aggregate check input, and regenerate the canonical `lefthook.yml`. |
-| B6 | 2026-08-18 | The standard guardrails set enabled `linter-coverage`, but the repository had no required exemption ledger for files without an applicable linter. | Add `config/linter-coverage-exemptions.yml` entries for the uncovered metadata, license, and Bats file classes. |
+| B1 | 2026-08-18 | Guardrails could not find canonical `lefthook.yml`; it was ignored/generated under another name. | Track the assembled file and stop ignoring it. |
+| B2 | 2026-08-18 | Canonical config had custom `bats-changed` commands outside the declared fragments. | Move those commands to `lefthook-remote.yml`. |
+| B3 | 2026-08-18 | Canonical config had five extra lint/coverage commands outside the fragments. | Use the pinned flake checks/devShell wrappers. |
+| B4 | 2026-08-18 | Canonical config was stale after materialization added three checks. | Regenerate it from `.#ci`. |
+| B5 | 2026-08-18 | Flake omitted required `actions` fragment. | Add it to materialization, exclude it from aggregate checks, and regenerate config. |
+| B6 | 2026-08-18 | Linter coverage required exemptions for files without an applicable linter. | Add the exemption ledger entries. |
+| B7 | 2026-08-18 | `SPEC.md` exceeded the configured 8192-byte Markdown limit after bug-history growth. | Compact redundant specification/history wording while retaining the record. |
 
 | id | status | task | cites |
 |----|--------|------|-------|
