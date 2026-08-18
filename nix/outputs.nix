@@ -16,12 +16,14 @@ let
     f: nixpkgs.lib.genAttrs supportedSystems (system: f nixpkgs.legacyPackages.${system});
   fragments = [
     "base"
+    "actions"
     "nix"
     "shell"
     "ascii"
     "markdown"
     "yaml"
   ];
+  checkFragments = builtins.filter (fragment: fragment != "actions") fragments;
 in
 {
   packages = forAllSystems (pkgs: {
@@ -105,7 +107,8 @@ in
   checks = forAllSystems (
     pkgs:
     (set-and-setting.lib.checksFor {
-      inherit pkgs fragments;
+      inherit pkgs;
+      fragments = checkFragments;
       src = ../.;
     })
     // {
