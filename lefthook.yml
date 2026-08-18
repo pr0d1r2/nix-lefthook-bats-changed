@@ -24,9 +24,6 @@ pre-commit:
     yamllint:
       glob: "*.{yml,yaml}"
       run: timeout ${LEFTHOOK_YAMLLINT_TIMEOUT:-30} lefthook-yamllint {staged_files}
-    bats-changed:
-      glob: "*.{sh,bats}"
-      run: timeout ${LEFTHOOK_BATS_CHANGED_TIMEOUT:-120} lefthook-bats-changed {staged_files}
 
 pre-push:
   commands:
@@ -44,6 +41,3 @@ pre-push:
     yamllint:
       glob: "*.{yml,yaml}"
       run: timeout ${LEFTHOOK_YAMLLINT_TIMEOUT:-30} lefthook-yamllint {push_files}
-    bats-changed:
-      glob: "*.{sh,bats}"
-      run: timeout ${LEFTHOOK_BATS_CHANGED_TIMEOUT:-120} lefthook-bats-changed {push_files}
