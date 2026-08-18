@@ -106,6 +106,7 @@ local paths, zero private refs.
 | B3 | 2026-08-18 | Canonical `lefthook.yml` still contained five additional lint and coverage commands not emitted by the declared guardrails fragment set, so exact fidelity comparison failed. | Remove the non-fragment commands from the canonical config and rely on the corresponding pinned flake checks/devShell wrappers. |
 | B4 | 2026-08-18 | The canonical `lefthook.yml` snapshot was stale after the guardrails fragment materialization added `nix-flake-check`, `unicode-lint`, and `linter-coverage`, so fidelity comparison failed. | Regenerate and track `lefthook.yml` from the repository's `.#ci` shell. |
 | B5 | 2026-08-18 | The flake declared an incomplete fragment set and omitted `actions`, while guardrails fidelity expects the standard `base actions nix shell ascii markdown yaml` set. | Add `actions` to the materialized fragment set, keep it out of the incompatible aggregate check input, and regenerate the canonical `lefthook.yml`. |
+| B6 | 2026-08-18 | The standard guardrails set enabled `linter-coverage`, but the repository had no required exemption ledger for files without an applicable linter. | Add `config/linter-coverage-exemptions.yml` entries for the uncovered metadata, license, and Bats file classes. |
 
 | id | status | task | cites |
 |----|--------|------|-------|
