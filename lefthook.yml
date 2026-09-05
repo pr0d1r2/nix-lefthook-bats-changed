@@ -2,6 +2,8 @@
 
 pre-commit:
   commands:
+    changelog-touched:
+      run: lefthook-changelog-touched
     gitleaks:
       run: lefthook-gitleaks {staged_files}
     git-conflict-markers:
@@ -14,6 +16,27 @@ pre-commit:
     actionlint:
       glob: ".github/workflows/*.{yml,yaml}"
       run: timeout ${LEFTHOOK_ACTIONLINT_TIMEOUT:-30} lefthook-actionlint {staged_files}
+    nixfmt:
+      glob: "*.nix"
+      run: lefthook-nixfmt {staged_files}
+    statix:
+      glob: "*.nix"
+      run: lefthook-statix {staged_files}
+    deadnix:
+      glob: "*.nix"
+      run: lefthook-deadnix {staged_files}
+    nix-no-embedded-shell:
+      glob: "*.nix"
+      run: lefthook-nix-no-embedded-shell {staged_files}
+    shellcheck:
+      glob: "*.sh"
+      run: lefthook-shellcheck {staged_files}
+    shfmt:
+      glob: "*.sh"
+      run: lefthook-shfmt {staged_files}
+    no-shell-functions:
+      glob: "*.sh"
+      run: lefthook-no-shell-functions {staged_files}
     unicode-lint:
       glob: "*"
       exclude: '\.(gif|png|jpg|jpeg|ico|webp|bmp|tiff|pdf|woff2?|ttf|eot|mp[34]|wav|ogg|zip|gz|tar|iso)$'
@@ -38,6 +61,35 @@ pre-push:
     actionlint:
       glob: ".github/workflows/*.{yml,yaml}"
       run: timeout ${LEFTHOOK_ACTIONLINT_TIMEOUT:-30} lefthook-actionlint {push_files}
+    nixfmt:
+      glob: "*.nix"
+      run: lefthook-nixfmt {push_files}
+    statix:
+      glob: "*.nix"
+      run: lefthook-statix {push_files}
+    deadnix:
+      glob: "*.nix"
+      run: lefthook-deadnix {push_files}
+    nix-no-embedded-shell:
+      glob: "*.nix"
+      run: lefthook-nix-no-embedded-shell {push_files}
+    shellcheck:
+      glob: "*.sh"
+      run: lefthook-shellcheck {push_files}
+    shfmt:
+      glob: "*.sh"
+      run: lefthook-shfmt {push_files}
+    no-shell-functions:
+      glob: "*.sh"
+      run: lefthook-no-shell-functions {push_files}
+    bats-parse:
+      glob: "**/*.bats"
+      run: timeout ${LEFTHOOK_BATS_PARSE_TIMEOUT:-30} lefthook-bats-parse {push_files}
+    bats-unit:
+      glob: "**/*.bats"
+      run: timeout ${LEFTHOOK_BATS_UNIT_TIMEOUT:-300} lefthook-bats-unit
+    tdd-order-bats:
+      run: timeout ${LEFTHOOK_TDD_ORDER_TIMEOUT:-30} lefthook-tdd-order-bats
     markdownlint:
       glob: "*.md"
       run: timeout ${LEFTHOOK_MARKDOWNLINT_TIMEOUT:-30} lefthook-markdownlint {push_files}
@@ -47,3 +99,8 @@ pre-push:
     yamllint:
       glob: "*.{yml,yaml}"
       run: timeout ${LEFTHOOK_YAMLLINT_TIMEOUT:-30} lefthook-yamllint {push_files}
+
+commit-msg:
+  commands:
+    commit-msg-lint:
+      run: lefthook-commit-msg-lint {1}
