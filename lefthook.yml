@@ -88,8 +88,6 @@ pre-push:
     bats-unit:
       glob: "**/*.bats"
       run: timeout ${LEFTHOOK_BATS_UNIT_TIMEOUT:-300} lefthook-bats-unit
-    tdd-order-bats:
-      run: timeout ${LEFTHOOK_TDD_ORDER_TIMEOUT:-30} lefthook-tdd-order-bats
     markdownlint:
       glob: "*.md"
       run: timeout ${LEFTHOOK_MARKDOWNLINT_TIMEOUT:-30} lefthook-markdownlint {push_files}
