@@ -106,6 +106,8 @@ local paths, zero private refs.
 | B5 | 2026-08-18 | Flake omitted required `actions` fragment. | Add it to materialization, exclude it from aggregate checks, and regenerate config. |
 | B6 | 2026-08-18 | Linter coverage required exemptions for files without an applicable linter. | Add the exemption ledger entries. |
 | B7 | 2026-08-18 | `SPEC.md` exceeded the configured 8192-byte Markdown limit after bug-history growth. | Compact redundant specification/history wording while retaining the record. |
+| B8 | 2026-09-22 | Guardrails invoked stale `lefthook-tdd-order-bats`, which is not provided by the pinned fragments and caused exit 127 after passing Bats tests. | Remove the unavailable hook from the canonical configuration. |
+| B9 | 2026-09-22 | Guardrails rejected the committed `lefthook.yml` because it was stale after shared fragment materialization removed commands no longer provided by the pinned standard. | Regenerate and commit the canonical hook configuration from the CI shell. |
 
 | id | status | task | cites |
 |----|--------|------|-------|
