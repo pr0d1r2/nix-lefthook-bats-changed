@@ -54,22 +54,20 @@ missed.
 
 ## The guardrails are this repository's own
 
-This repository is gated by `lefthook.yml`. Before a machine-authored branch is
-pushed, it is run against that gate: the same checks a human gets on
-`git commit`, in the same environment continuous integration uses. A change the
-gate refuses is not pushed and no pull request is opened for it.
+This repository's CI is delegated to the shared guardrails workflow referenced
+by [`.github/workflows/ci.yml`](../.github/workflows/ci.yml). There is no tracked
+`lefthook.yml` in this repository, so the local hook command used by some
+consumers is not an audit command for this tree.
 
-Run it yourself:
+Run the repository's configured check locally with:
 
 ```sh
-lefthook run pre-commit --all-files
+nix flake check
 ```
 
-That property is recent rather than original, which is the honest way to put
-it: the loop's agent worked for a long time in a sandbox where these hooks were
-never installed, so continuous integration was the first thing to see a change,
-and defects a local hook names in a fraction of a second cost a push and a full
-CI round each.
+The workflow is the authoritative gate; its exact checks can change when the
+shared workflow changes. The flake check is the repository's local entry point,
+not a promise that it reproduces every hosted check.
 
 ## What a reader should actually check
 
