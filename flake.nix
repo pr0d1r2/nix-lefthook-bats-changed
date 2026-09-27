@@ -37,13 +37,8 @@
         "yaml"
       ];
       src = ./.;
-    }
-    // (import ./nix/outputs.nix {
-      inherit
-        self
-        nixpkgs
-        set-and-setting
-        nix-lefthook-bats-failures-only-src
-        ;
-    });
+      extraPackages = pkgs: {
+        default = import ./nix/package.nix { inherit pkgs nix-lefthook-bats-failures-only-src; };
+      };
+    };
 }

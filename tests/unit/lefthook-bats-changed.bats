@@ -5,6 +5,18 @@ setup() {
     load "${BATS_LIB_PATH}/bats-assert/load.bash"
     load "${BATS_LIB_PATH}/bats-file/load.bash"
 
+    # The standard's dev shell does not carry this repo's own package, so
+    # exercise the working-tree script (placeholder resolved the way
+    # packages.default resolves it) under writeShellApplication's strict mode.
+    local root="$BATS_TEST_DIRNAME/../.."
+    mkdir -p "$BATS_TEST_TMPDIR/bin"
+    sed "s|@FIND_BATS_FOR_FILE@|$root/find-bats-for-file.sh|" \
+        "$root/lefthook-bats-changed.sh" >"$BATS_TEST_TMPDIR/lefthook-bats-changed.sh"
+    printf '#!/usr/bin/env bash\nexec bash -euo pipefail "%s" "$@"\n' \
+        "$BATS_TEST_TMPDIR/lefthook-bats-changed.sh" >"$BATS_TEST_TMPDIR/bin/lefthook-bats-changed"
+    chmod +x "$BATS_TEST_TMPDIR/bin/lefthook-bats-changed"
+    export PATH="$BATS_TEST_TMPDIR/bin:$PATH"
+
     TMP_REPO="$(mktemp -d)"
     mkdir -p "$TMP_REPO/scripts/foo" "$TMP_REPO/tests/unit"
 }

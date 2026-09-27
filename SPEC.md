@@ -43,8 +43,8 @@ local paths, zero private refs.
   (pre-push `bats-changed` command on `*.{sh,bats}`)
 - I.flake: `packages.${system}.default` — Nix pkg output
   (`lefthook-bats-changed`)
-- I.devshell: `devShells.${system}.default` + `.#ci` — dev/CI shells,
-  built inline from `flake = false` lint-hook source leaves
+- I.devshell: `devShells.${system}.default` — the standard's
+  `mkConsumerFlake` shell; no repo-local shells, checks or confirm
 - I.ci: `.github/workflows/ci.yml` — CI is delegated to the shared
   `set-and-setting` guardrails workflow.
 
@@ -106,8 +106,9 @@ local paths, zero private refs.
 | B5 | 2026-08-18 | Flake omitted required `actions` fragment. | Add it to materialization, exclude it from aggregate checks, and regenerate config. |
 | B6 | 2026-08-18 | Linter coverage required exemptions for files without an applicable linter. | Add the exemption ledger entries. |
 | B7 | 2026-08-18 | `SPEC.md` exceeded the configured 8192-byte Markdown limit after bug-history growth. | Compact redundant specification/history wording while retaining the record. |
-| B8 | 2026-09-22 | Guardrails invoked stale `lefthook-tdd-order-bats`, which is not provided by the pinned fragments and caused exit 127 after passing Bats tests. | Remove the unavailable hook from the canonical configuration. |
-| B9 | 2026-09-22 | Guardrails rejected the committed `lefthook.yml` because it was stale after shared fragment materialization removed commands no longer provided by the pinned standard. | Regenerate and commit the canonical hook configuration from the CI shell. |
+| B8 | 2026-09-22 | Guardrails invoked stale `lefthook-tdd-order-bats` (not in pinned fragments): exit 127. | Remove the unavailable hook. |
+| B9 | 2026-09-22 | Committed `lefthook.yml` went stale vs the pinned standard's fragments. | Regenerate it from the CI shell. |
+| B10 | 2026-09-27 | Local devShells/checks/confirm pinned an old standard whose parallel `bats --jobs` hung CI 6h. | Use `mkConsumerFlake`, bump the standard, gitignore the materialized `lefthook.yml`. |
 
 | id | status | task | cites |
 |----|--------|------|-------|
