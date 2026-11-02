@@ -13,7 +13,10 @@ let
   );
   lefthook-bats-failures-only = pkgs.writeShellApplication {
     name = "lefthook-bats-failures-only";
-    runtimeInputs = [ batsWithLibs ];
+    runtimeInputs = [
+      batsWithLibs
+      pkgs.parallel
+    ];
     text = builtins.readFile "${nix-lefthook-bats-failures-only-src}/lefthook-bats-failures-only.sh";
   };
 in
@@ -23,6 +26,7 @@ pkgs.writeShellApplication {
     batsWithLibs
     pkgs.gawk
     pkgs.coreutils
+    pkgs.parallel
     lefthook-bats-failures-only
   ];
   text = builtins.replaceStrings [ "@FIND_BATS_FOR_FILE@" ] [ "${findBatsForFile}" ] (
