@@ -1,12 +1,15 @@
 # nix-lefthook-bats-changed
 
+<!-- no architecture diagram: this repository has no architecture shape to draw -->
+<!-- no development architecture diagram: this repository has no development shape to draw -->
+
 <!-- hallucinogen:autonomy-disclaimer start -->
 > Read [LLM-DISCLAIMER](docs/LLM-DISCLAIMER.md) first. This repository is
 > tended by an autonomous loop, and that file says what the loop may do here,
 > what it may not, and what to check before trusting anything in this tree.
 <!-- hallucinogen:autonomy-disclaimer end -->
 
-[![CI](https://github.com/pr0d1r2/nix-lefthook-bats-changed/actions/workflows/ci.yml/badge.svg)](https://github.com/pr0d1r2/nix-lefthook-bats-changed/actions/workflows/ci.yml)
+[![CI](https://github.com/pr0d1r2/nix-lefthook-bats-changed/actions/workflows/ci.yml/badge.svg)](https://github.com/pr0d1r2/nix-lefthook-bats-changed/actions/workflows/ci.yml) [![NixOS 26.05](https://img.shields.io/badge/NixOS-26.05-blue.svg?logo=nixos)](https://nixos.org)
 
 > This code is LLM-generated and validated through an automated integration process using [lefthook](https://github.com/evilmartians/lefthook) git hooks, [bats](https://github.com/bats-core/bats-core) unit tests, and GitHub Actions CI.
 
