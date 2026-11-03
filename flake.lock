@@ -35,11 +35,11 @@
     "nix-lefthook-bats-failures-only-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1793596298,
-        "narHash": "sha256-t16eI0YQEX6qBXITllVprraexG1WGhJZfgY1sey+ZhY=",
+        "lastModified": 1793627163,
+        "narHash": "sha256-AcJUEy/mQwvy9ZOCbVdWhRQ7cXrRFP5Y6gZJYsYvRbw=",
         "owner": "pr0d1r2",
         "repo": "nix-lefthook-bats-failures-only",
-        "rev": "87a915b396347d9d29c07333052d035f1315f063",
+        "rev": "26c4e8c053f1c2d9dc365b6887340cb640f13444",
         "type": "github"
       },
       "original": {
@@ -719,11 +719,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793563480,
-        "narHash": "sha256-wYqaw5gMAkBT0OXPk0Jgrj92/kcnojLF4EfgMjzlF1o=",
+        "lastModified": 1793698448,
+        "narHash": "sha256-HPonLHkGZlaIAmx1B0vziOO/1eDlZSxQ4ekHTk8sBJg=",
         "owner": "pr0d1r2",
         "repo": "set-and-setting",
-        "rev": "81b2e0f4de1fc89f7e60022b7aec9fa04bffda7a",
+        "rev": "b1ec4380530f85b841e2502becd2754bf525d3d0",
         "type": "github"
       },
       "original": {
