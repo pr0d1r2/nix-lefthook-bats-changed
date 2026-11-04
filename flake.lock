@@ -35,11 +35,11 @@
     "nix-lefthook-bats-failures-only-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1793627163,
-        "narHash": "sha256-AcJUEy/mQwvy9ZOCbVdWhRQ7cXrRFP5Y6gZJYsYvRbw=",
+        "lastModified": 1793715294,
+        "narHash": "sha256-9717uRTYOtpqbhY7TXm3x+LrK6eMurMkpHvC/O3lACA=",
         "owner": "pr0d1r2",
         "repo": "nix-lefthook-bats-failures-only",
-        "rev": "26c4e8c053f1c2d9dc365b6887340cb640f13444",
+        "rev": "78effea68dcc36186ecaf18921ea24f9f6ed0d11",
         "type": "github"
       },
       "original": {
