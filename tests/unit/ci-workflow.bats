@@ -6,11 +6,11 @@
         /^  guardrails:[[:space:]]*$/ { in_guardrails=1; next }
         /^  [^[:space:]][^:]*:/ { in_guardrails=0 }
         in_guardrails && /^[[:space:]]+uses:[[:space:]]/ {
-            sub(/^[[:space:]]+uses:[[:space:]]+[^@]+@/, "")
+            sub(/^[[:space:]]+uses:[[:space:]]+/, "")
             print
             exit
         }
     ' "$workflow"
     [ "$status" -eq 0 ]
-    [[ "$output" =~ ^[0-9a-f]{40}$ ]]
+    [[ "$output" =~ ^pr0d1r2/set-and-setting/\.github/workflows/guardrails\.yml@[0-9a-f]{40}$ ]]
 }
