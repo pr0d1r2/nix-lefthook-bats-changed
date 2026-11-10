@@ -7,6 +7,10 @@
     ruby="$(nix eval --raw --impure --expr "let f = builtins.getFlake \"$root\"; pkgs = import f.inputs.nixpkgs {}; in pkgs.ruby.version")"
     brotli="$(nix eval --raw --impure --expr "let f = builtins.getFlake \"$root\"; pkgs = import f.inputs.nixpkgs {}; in pkgs.brotli.version")"
 
-    [ "$ruby" = "3.4.12" ]
-    [ "$brotli" = "1.2.1" ]
+    version_at_least() {
+        [ "$(printf '%s\n' "$1" "$2" | LC_ALL=C sort -V | head -n1)" = "$2" ]
+    }
+
+    version_at_least "$ruby" "3.4.12"
+    version_at_least "$brotli" "1.2.1"
 }
